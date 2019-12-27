@@ -1,11 +1,7 @@
-'use strict';
-
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const apiRoutes = require('./routes/api.js');
-
-const portNum = process.env.PORT;
 
 const app = express();
 
@@ -35,6 +31,8 @@ app.use(function(req, res, next) {
     .type('text')
     .send('Not Found');
 });
+
+const portNum = process.env.PORT || 3000;
 
 //Start our server and tests!
 app.listen(portNum, () => {

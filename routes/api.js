@@ -12,7 +12,7 @@ const expect = require('chai').expect;
 const MongoClient = require('mongodb');
 const ObjectId = require('mongodb').ObjectID;
 
-const CONNECTION_STRING = process.env.DB; //MongoClient.connect(CONNECTION_STRING, function(err, db) {});
+const CONNECTION_STRING = process.env.DB_URI;
 
 module.exports = function (app) {
 
@@ -26,6 +26,7 @@ module.exports = function (app) {
       MongoClient.connect(CONNECTION_STRING, { useUnifiedTopology: true }, (err, client) => {
         const db = client.db('issueTracker');
         db.collection(project).find(searchQuery).toArray((err, docs) => res.json(docs));
+        // console.log(doc.value);
       });
     })
     
@@ -42,13 +43,14 @@ module.exports = function (app) {
         status_text: req.body.status_text || ''
       };
       if(!issue.issue_title || !issue.issue_text || !issue.created_by) {
-        res.send('missing inputs');
+        res.send('Missing inputs');
       } else {
         MongoClient.connect(CONNECTION_STRING, { useUnifiedTopology: true }, (err, client) => {
           const db = client.db('issueTracker');
           db.collection(project).insertOne(issue, (err, doc) => {
             issue._id = doc.insertedId;
             res.json(issue);
+            // console.log(doc.value);
           });
         });
       }
@@ -58,17 +60,19 @@ module.exports = function (app) {
       const project = req.params.project;
       const issue = req.body._id;
       delete req.body._id;
-      const updates = req.body;
-      for (const ele in updates) { if (!updates[ele]) { delete updates[ele] } }
-      if (updates.open) { updates.open = String(updates.open) == "true" }
+      let updates = req.body;
+      // convert open field to boolean if necessary
+      if (typeof updates.open === 'string') {
+        updates.open.toLowerCase() === 'true' ? updates.open = true : updates.open = false;
+      }
       if (Object.keys(updates).length === 0) {
-        res.send('no updated field sent');
+        res.send('No updated field sent');
       } else {
         updates.updated_on = new Date();
         MongoClient.connect(CONNECTION_STRING, { useUnifiedTopology: true }, (err, client) => {
           const db = client.db('issueTracker');
-          db.collection(project).findAndModify({_id: new ObjectId(issue)}, [['_id', 1]], {$set: updates}, {new: true}, (err, doc) => {
-            (!err) ? res.send('successfully updated') : res.send('could not update ' + issue + ' ' + err);
+          db.collection(project).findOneAndUpdate({_id: new ObjectId(issue)}, {$set: updates}, {new: true}, (err, doc) => {
+            (!err && doc.value) ? res.send('Successfully updated') : res.send('Could not update ' + issue);
             // console.log(doc.value);
           });
         });  
@@ -84,7 +88,8 @@ module.exports = function (app) {
         MongoClient.connect(CONNECTION_STRING, { useUnifiedTopology: true }, (err, client) => {
           const db = client.db('issueTracker');
           db.collection(project).findOneAndDelete({_id: new ObjectId(issue)}, (err, doc) => {
-            (!err) ? res.send('deleted ' + issue) : res.send('could not delete ' + issue + ' ' + err);
+            (!err) ? res.send('Deleted ' + issue) : res.send('Could not delete ' + issue);
+            // console.log(doc.value);
           });
         });
       }

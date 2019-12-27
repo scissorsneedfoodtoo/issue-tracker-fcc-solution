@@ -1,0 +1,30 @@
+{
+  "name": "issue-tracker",
+  "version": "0.0.1",
+  "description": "Quality Assurance 2: Issue Tracker Solution",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "mocha --exit --ui tdd tests/"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^3.21.2",
+    "mathjs": "^6.2.5",
+    "mocha": "^6.2.2",
+    "mongodb": "^3.4.1",
+    "nodemon": "^2.0.2"
+  },
+  "engines": {
+    "node": "4.4.3"
+  },
+  "keywords": [
+    "node",
+    "express"
+  ],
+  "license": "MIT"
+}

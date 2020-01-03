@@ -3,7 +3,9 @@
 *
 *       FILL IN EACH FUNCTIONAL TEST BELOW COMPLETELY
 *       -----[Keep the tests in the same order!]-----
-*       (if additional are added, keep them at the very end!)
+*       If additional tests are added, keep them at the very end
+*
+*
 */
 
 const chaiHttp = require('chai-http');
@@ -31,8 +33,8 @@ suite('Functional Tests', function() {
           assigned_to: 'Chai and Mocha',
           status_text: 'In QA'
         })
-        .end(function(err, res){
-          assert.equal(res.status, 200);
+        .end((err, res) => {
+          assert.strictEqual(res.status, 200);
           assert.property(res.body, 'issue_title');
           assert.property(res.body, 'issue_text');
           assert.property(res.body, 'created_on');
@@ -43,13 +45,13 @@ suite('Functional Tests', function() {
           assert.property(res.body, 'status_text');
           assert.property(res.body, '_id');
           _id1 = res.body._id;
-          assert.equal(res.body.issue_title, 'Title');
-          assert.equal(res.body.issue_text, 'text');
-          assert.equal(res.body.created_by, 'Functional Test - Every field filled in');
-          assert.equal(res.body.assigned_to, 'Chai and Mocha');
-          assert.equal(res.body.status_text, 'In QA');
+          assert.strictEqual(res.body.issue_title, 'Title');
+          assert.strictEqual(res.body.issue_text, 'text');
+          assert.strictEqual(res.body.created_by, 'Functional Test - Every field filled in');
+          assert.strictEqual(res.body.assigned_to, 'Chai and Mocha');
+          assert.strictEqual(res.body.status_text, 'In QA');
           assert.isBoolean(res.body.open);
-          assert.equal(res.body.open, true);
+          assert.strictEqual(res.body.open, true);
           done();
         });
       });
@@ -62,8 +64,8 @@ suite('Functional Tests', function() {
           issue_text: 'text',
           created_by: 'Functional Test - Required fields filled in'
         })
-        .end(function(err, res){
-          assert.equal(res.status, 200);
+        .end((err, res) => {
+          assert.strictEqual(res.status, 200);
           assert.property(res.body, 'issue_title');
           assert.property(res.body, 'issue_text');
           assert.property(res.body, 'created_on');
@@ -74,13 +76,13 @@ suite('Functional Tests', function() {
           assert.property(res.body, 'status_text');
           assert.property(res.body, '_id');
           _id2 = res.body._id;
-          assert.equal(res.body.issue_title, 'Title 2');
-          assert.equal(res.body.issue_text, 'text');
-          assert.equal(res.body.created_by, 'Functional Test - Required fields filled in');
-          assert.equal(res.body.assigned_to, '');
-          assert.equal(res.body.status_text, '');
+          assert.strictEqual(res.body.issue_title, 'Title 2');
+          assert.strictEqual(res.body.issue_text, 'text');
+          assert.strictEqual(res.body.created_by, 'Functional Test - Required fields filled in');
+          assert.strictEqual(res.body.assigned_to, '');
+          assert.strictEqual(res.body.status_text, '');
           assert.isBoolean(res.body.open);
-          assert.equal(res.body.open, true);
+          assert.strictEqual(res.body.open, true);
           done();
         });        
       });
@@ -93,9 +95,9 @@ suite('Functional Tests', function() {
           created_by: 'Functional Test - Missing required fields',
           assigned_to: 'Chai and Mocha'
         })
-        .end(function(err, res){
-          assert.equal(res.status, 200);
-          assert.equal(res.text, 'Missing inputs');
+        .end((err, res) => {
+          assert.strictEqual(res.status, 200);
+          assert.strictEqual(res.text, 'Missing inputs');
           done();
         });        
       });
@@ -108,9 +110,9 @@ suite('Functional Tests', function() {
         chai.request(server)
         .put('/api/issues/functionalTests')
         .send({_id: _id1})
-        .end(function(err, res){
-          assert.equal(res.status, 200);
-          assert.equal(res.text, 'No updated field sent');
+        .end((err, res) => {
+          assert.strictEqual(res.status, 200);
+          assert.strictEqual(res.text, 'No updated field sent');
           done();
         });        
       });
@@ -119,9 +121,9 @@ suite('Functional Tests', function() {
         chai.request(server)
         .put('/api/issues/functionalTests')
         .send({_id: _id1, issue_text: 'updated issue text test'})
-        .end(function(err, res){
-          assert.equal(res.status, 200);
-          assert.equal(res.text, 'Successfully updated');
+        .end((err, res) => {
+          assert.strictEqual(res.status, 200);
+          assert.strictEqual(res.text, 'Successfully updated');
           done();
         });  
       });
@@ -130,9 +132,9 @@ suite('Functional Tests', function() {
         chai.request(server)
         .put('/api/issues/functionalTests')
         .send({_id: _id2, issue_text: 'updated issue text test for the second issue', open: 'false'})
-        .end(function(err, res){
-          assert.equal(res.status, 200);
-          assert.equal(res.text, 'Successfully updated');
+        .end((err, res) => {
+          assert.strictEqual(res.status, 200);
+          assert.strictEqual(res.text, 'Successfully updated');
           done();
         });  
       });
@@ -145,8 +147,8 @@ suite('Functional Tests', function() {
         chai.request(server)
         .get('/api/issues/functionalTests')
         .query({})
-        .end(function(err, res){
-          assert.equal(res.status, 200);
+        .end((err, res) => {
+          assert.strictEqual(res.status, 200);
           assert.isArray(res.body);
           assert.property(res.body[0], 'issue_title');
           assert.property(res.body[0], 'issue_text');
@@ -165,8 +167,8 @@ suite('Functional Tests', function() {
         chai.request(server)
         .get('/api/issues/functionalTests')
         .query({assigned_to: 'Chai and Mocha'})
-        .end(function(err, res){
-          assert.equal(res.status, 200);
+        .end((err, res) => {
+          assert.strictEqual(res.status, 200);
           assert.property(res.body[0], 'issue_title');
           assert.property(res.body[0], 'issue_text');
           assert.property(res.body[0], 'created_on');
@@ -176,7 +178,7 @@ suite('Functional Tests', function() {
           assert.property(res.body[0], 'open');
           assert.property(res.body[0], 'status_text');
           assert.property(res.body[0], '_id');
-          assert.equal(res.body[0].assigned_to, 'Chai and Mocha');
+          assert.strictEqual(res.body[0].assigned_to, 'Chai and Mocha');
           done();
         });
       });
@@ -185,8 +187,8 @@ suite('Functional Tests', function() {
         chai.request(server)
         .get('/api/issues/functionalTests')
         .query({open: false})
-        .end(function(err, res){
-          assert.equal(res.status, 200);
+        .end((err, res) => {
+          assert.strictEqual(res.status, 200);
           assert.property(res.body[0], 'issue_title');
           assert.property(res.body[0], 'issue_text');
           assert.property(res.body[0], 'created_on');
@@ -196,8 +198,8 @@ suite('Functional Tests', function() {
           assert.property(res.body[0], 'open');
           assert.property(res.body[0], 'status_text');
           assert.property(res.body[0], '_id');
-          assert.equal(res.body[0].open, false);
-          assert.equal(res.body[0].issue_title, 'Title 2');
+          assert.strictEqual(res.body[0].open, false);
+          assert.strictEqual(res.body[0].issue_title, 'Title 2');
           done();
         });
       });
@@ -210,9 +212,9 @@ suite('Functional Tests', function() {
         chai.request(server)
         .delete('/api/issues/functionalTests')
         .send({})
-        .end(function(err, res){
-          assert.equal(res.status, 200);
-          assert.equal(res.text, '_id error');
+        .end((err, res) => {
+          assert.strictEqual(res.status, 200);
+          assert.strictEqual(res.text, '_id error');
           done();
         });  
       });
@@ -221,22 +223,22 @@ suite('Functional Tests', function() {
         chai.request(server)
         .delete('/api/issues/functionalTests')
         .send({_id: _id2})
-        .end(function(err, res){
-          assert.equal(res.status, 200);
-          assert.equal(res.text, 'Deleted '+ _id2);
+        .end((err, res) => {
+          assert.strictEqual(res.status, 200);
+          assert.strictEqual(res.text, 'Deleted '+ _id2);
           done();
         });  
       });
 
       // Leave this out of boilerplate -- 
       // learners can add this themselves if they want to
-      test('Clean up remaining test', function(done) {
+      test('Clean up remaining test issue', function(done) {
         chai.request(server)
         .delete('/api/issues/functionalTests')
         .send({_id: _id1})
-        .end(function(err, res){
-          assert.equal(res.status, 200);
-          assert.equal(res.text, 'Deleted '+ _id1);
+        .end((err, res) => {
+          assert.strictEqual(res.status, 200);
+          assert.strictEqual(res.text, 'Deleted '+ _id1);
           done();
         });  
       });

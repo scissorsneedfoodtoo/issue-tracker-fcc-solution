@@ -14,11 +14,11 @@ const ObjectId = require('mongodb').ObjectID;
 
 const CONNECTION_STRING = process.env.DB_URI;
 
-module.exports = function (app) {
+module.exports = (app) => {
 
   app.route('/api/issues/:project')
   
-    .get(function (req, res){
+    .get((req, res) => {
       const project = req.params.project;
       const searchQuery = req.query;
       if (searchQuery._id) { searchQuery._id = new ObjectId(searchQuery._id)}
@@ -30,7 +30,7 @@ module.exports = function (app) {
       });
     })
     
-    .post(function (req, res){
+    .post((req, res) => {
       const project = req.params.project;
       let issue = {
         issue_title: req.body.issue_title,
@@ -56,7 +56,7 @@ module.exports = function (app) {
       }
     })
     
-    .put(function (req, res) {
+    .put((req, res) => {
       const project = req.params.project;
       const issue = req.body._id;
       delete req.body._id;
@@ -79,7 +79,7 @@ module.exports = function (app) {
       }
     })
     
-    .delete(function (req, res){
+    .delete((req, res) => {
       const project = req.params.project;
       const issue = req.body._id;
       if (!issue) {

@@ -24,7 +24,7 @@ module.exports = (app) => {
       if (searchQuery._id) { searchQuery._id = new ObjectId(searchQuery._id)}
       if (searchQuery.open) { searchQuery.open = String(searchQuery.open) == "true" }
       MongoClient.connect(CONNECTION_STRING, { useUnifiedTopology: true }, (err, client) => {
-        const db = client.db('issueTracker');
+        const db = client.db('issue-tracker-v0');
         db.collection(project).find(searchQuery).toArray((err, docs) => res.json(docs));
         // console.log(doc.value);
       });
@@ -46,7 +46,7 @@ module.exports = (app) => {
         res.send('Missing inputs');
       } else {
         MongoClient.connect(CONNECTION_STRING, { useUnifiedTopology: true }, (err, client) => {
-          const db = client.db('issueTracker');
+          const db = client.db('issue-tracker-v0');
           db.collection(project).insertOne(issue, (err, doc) => {
             issue._id = doc.insertedId;
             res.json(issue);
@@ -70,7 +70,7 @@ module.exports = (app) => {
       } else {
         updates.updated_on = new Date();
         MongoClient.connect(CONNECTION_STRING, { useUnifiedTopology: true }, (err, client) => {
-          const db = client.db('issueTracker');
+          const db = client.db('issue-tracker-v0');
           db.collection(project).findOneAndUpdate({_id: new ObjectId(issue)}, {$set: updates}, {new: true}, (err, doc) => {
             (!err && doc.value) ? res.send('Successfully updated') : res.send('Could not update ' + issue);
             // console.log(doc.value);
@@ -86,10 +86,9 @@ module.exports = (app) => {
         res.send('_id error');
       } else {
         MongoClient.connect(CONNECTION_STRING, { useUnifiedTopology: true }, (err, client) => {
-          const db = client.db('issueTracker');
+          const db = client.db('issue-tracker-v0');
           db.collection(project).findOneAndDelete({_id: new ObjectId(issue)}, (err, doc) => {
-            (!err) ? res.send('Deleted ' + issue) : res.send('Could not delete ' + issue);
-            // console.log(doc.value);
+            (!err && doc.value) ? res.send('Deleted ' + issue) : res.send('Could not delete ' + issue);
           });
         });
       }
